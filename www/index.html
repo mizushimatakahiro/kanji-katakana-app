@@ -34,13 +34,13 @@
         <span class="btn-icon">漢</span>
         <span class="btn-label">かんじ<br>がくしゅう</span>
       </button>
+      <button class="menu-btn names-btn wide-btn" onclick="App.goTo('names')">
+        <span class="btn-icon">👤</span>
+        <span class="btn-label">かぞくと ともだちの<br>なまえを カタカナで かこう</span>
+      </button>
       <button class="menu-btn test-btn" onclick="App.goTo('test')">
         <span class="btn-icon">✏️</span>
         <span class="btn-label">テスト<br>モード</span>
-      </button>
-      <button class="menu-btn names-btn" onclick="App.goTo('names')">
-        <span class="btn-icon">👤</span>
-        <span class="btn-label">カタカナ<br>なまえ</span>
       </button>
       <button class="menu-btn wrong-btn" onclick="App.goTo('wrong')">
         <span class="btn-icon">📖</span>
@@ -79,7 +79,7 @@
   <div id="names-screen" class="screen">
     <div class="screen-header">
       <button class="back-btn" onclick="App.goTo('home')">◀ もどる</button>
-      <h2 class="screen-title">カタカナ なまえ</h2>
+      <h2 class="screen-title names-screen-title">なまえを カタカナで かこう</h2>
     </div>
     <div class="practice-area">
       <!-- 名前全体表示 -->

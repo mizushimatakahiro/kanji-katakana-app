@@ -78,6 +78,22 @@ body {
   max-width: 360px;
   margin-top: 14px;
 }
+/* 横幅フルのワイドボタン（名前モード） */
+.menu-btn.wide-btn {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  gap: 10px;
+  padding: 14px 20px;
+  min-height: auto;
+}
+.menu-btn.wide-btn .btn-icon {
+  font-size: 1.8em;
+  margin-bottom: 0;
+}
+.menu-btn.wide-btn .btn-label {
+  font-size: 0.85em;
+  text-align: left;
+}
 /* 5つ目のボタン（まちがえたかんじ）を中央に配置 */
 .menu-buttons .menu-btn:nth-child(5) {
   grid-column: 1 / -1;
@@ -506,6 +522,10 @@ body {
 }
 
 /* ===== カタカナ人物名モード ===== */
+.names-screen-title {
+  font-size: 1.05em;
+  margin-right: 40px;
+}
 .names-name-display {
   display: flex;
   gap: 4px;
