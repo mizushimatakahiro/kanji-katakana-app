@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>かんじとカタカナ</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
+</head>
+<body>
+  <!-- ========== トップ画面 ========== -->
+  <div id="home-screen" class="screen active">
+    <div class="home-header">
+      <h1 class="app-title">かんじと<br>カタカナ</h1>
+      <p class="app-subtitle">たのしく まなぼう！</p>
+    </div>
+    <div class="mascot-container">
+      <img src="イメージキャラクター.png" alt="マスコットキャラクター" class="mascot-img mascot-bounce" id="home-mascot">
+    </div>
+    <div class="menu-buttons">
+      <button class="menu-btn katakana-btn" onclick="App.goTo('katakana')">
+        <span class="btn-icon">ア</span>
+        <span class="btn-label">カタカナ<br>がくしゅう</span>
+      </button>
+      <button class="menu-btn kanji-btn" onclick="App.goTo('kanji')">
+        <span class="btn-icon">漢</span>
+        <span class="btn-label">かんじ<br>がくしゅう</span>
+      </button>
+      <button class="menu-btn test-btn" onclick="App.goTo('test')">
+        <span class="btn-icon">✏️</span>
+        <span class="btn-label">テスト<br>モード</span>
+      </button>
+      <button class="menu-btn wrong-btn" onclick="App.goTo('wrong')">
+        <span class="btn-icon">📖</span>
+        <span class="btn-label">まちがえた<br>かんじ</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== カタカナ学習モード ========== -->
+  <div id="katakana-screen" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="App.goTo('home')">◀ もどる</button>
+      <h2 class="screen-title">カタカナ がくしゅう</h2>
+    </div>
+    <div class="practice-area">
+      <div class="char-display" id="katakana-display">ア</div>
+      <div class="stroke-info" id="katakana-stroke-info">かくすう: 2かく</div>
+      <div class="canvas-wrapper">
+        <canvas id="katakana-canvas" width="300" height="300"></canvas>
+        <div class="canvas-hint" id="katakana-hint">ゆびで なぞってね！</div>
+      </div>
+      <div class="practice-buttons">
+        <button class="action-btn clear-btn" onclick="App.katakana.clearCanvas()">けす</button>
+        <button class="action-btn check-btn" onclick="App.katakana.check()">チェック！</button>
+        <button class="action-btn next-btn" onclick="App.katakana.next()">つぎへ ▶</button>
+      </div>
+    </div>
+    <img src="イメージキャラクター.png" alt="" class="mascot-small" id="katakana-mascot">
+  </div>
+
+  <!-- ========== 漢字学習モード ========== -->
+  <div id="kanji-screen" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="App.goTo('home')">◀ もどる</button>
+      <h2 class="screen-title">かんじ がくしゅう</h2>
+    </div>
+    <div class="practice-area">
+      <div class="kanji-info">
+        <span class="kanji-reading" id="kanji-reading">いち</span>
+      </div>
+      <div id="kanji-writer-container" class="writer-container"></div>
+      <div class="practice-buttons">
+        <button class="action-btn clear-btn" onclick="App.kanji.reset()">もういちど</button>
+        <button class="action-btn hint-btn" onclick="App.kanji.showHint()">ヒント</button>
+        <button class="action-btn next-btn" onclick="App.kanji.next()">つぎへ ▶</button>
+      </div>
+    </div>
+    <img src="イメージキャラクター.png" alt="" class="mascot-small" id="kanji-mascot">
+  </div>
+
+  <!-- ========== テストモード ========== -->
+  <div id="test-screen" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="App.goTo('home')">◀ もどる</button>
+      <h2 class="screen-title">テスト モード</h2>
+    </div>
+    <div class="test-area">
+      <div class="test-progress" id="test-progress">1 / 20</div>
+      <div class="test-reading" id="test-reading">やま</div>
+      <p class="test-instruction">この かんじを かいてね！</p>
+      <div class="canvas-wrapper">
+        <canvas id="test-canvas" width="300" height="300"></canvas>
+      </div>
+      <div class="practice-buttons">
+        <button class="action-btn clear-btn" onclick="App.test.clearCanvas()">けす</button>
+        <button class="action-btn check-btn" onclick="App.test.showAnswer()">こたえを みる</button>
+      </div>
+      <div class="test-answer-area hidden" id="test-answer-area">
+        <div class="test-answer-kanji" id="test-answer-kanji">山</div>
+        <p>あなたの こたえは あっていた？</p>
+        <div class="answer-buttons">
+          <button class="action-btn correct-btn" onclick="App.test.answer(true)">⭕ あってた！</button>
+          <button class="action-btn incorrect-btn" onclick="App.test.answer(false)">❌ まちがえた</button>
+        </div>
+      </div>
+    </div>
+    <img src="イメージキャラクター.png" alt="" class="mascot-small" id="test-mascot">
+  </div>
+
+  <!-- ========== テスト結果画面 ========== -->
+  <div id="result-screen" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="App.goTo('home')">◀ もどる</button>
+      <h2 class="screen-title">テストの けっか</h2>
+    </div>
+    <div class="result-area">
+      <img src="イメージキャラクター.png" alt="" class="mascot-img mascot-bounce">
+      <div class="result-score" id="result-score">20 / 20</div>
+      <div class="result-message" id="result-message">すごい！かんぺき！</div>
+      <div class="result-details" id="result-details"></div>
+      <button class="action-btn menu-btn-large" onclick="App.goTo('home')">トップに もどる</button>
+    </div>
+  </div>
+
+  <!-- ========== 間違えた漢字 ========== -->
+  <div id="wrong-screen" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="App.goTo('home')">◀ もどる</button>
+      <h2 class="screen-title">まちがえた かんじ</h2>
+    </div>
+    <div class="wrong-area">
+      <div class="wrong-list" id="wrong-list">
+        <p class="empty-message">まちがえた かんじは まだ ないよ！</p>
+      </div>
+      <button class="action-btn clear-btn" id="clear-wrong-btn" onclick="App.wrong.clearAll()" style="display:none;">リセット</button>
+    </div>
+  </div>
+
+  <!-- ========== 祝福オーバーレイ ========== -->
+  <div id="celebration-overlay" class="celebration hidden">
+    <div class="celebration-content">
+      <img src="イメージキャラクター.png" alt="" class="mascot-img mascot-celebrate">
+      <div class="celebration-text">お見事！</div>
+      <div class="confetti-container" id="confetti-container"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
