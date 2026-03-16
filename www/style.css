@@ -178,13 +178,35 @@ body {
   max-width: 400px;
 }
 
+/* ===== カタカナ・ひらがなペア ===== */
+.katakana-pair {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+.hiragana-label {
+  font-size: 2.4em;
+  font-weight: 700;
+  color: #ad1457;
+  background: linear-gradient(135deg, #fce4ec, #f3e5f5);
+  padding: 4px 16px;
+  border-radius: 16px;
+  border: 2px solid #f48fb1;
+}
+.pair-arrow {
+  font-size: 1.6em;
+  color: #ce93d8;
+  font-weight: 700;
+}
+
 .char-display {
   font-size: 5em;
   font-weight: 900;
   color: #6a1b9a;
   text-align: center;
   line-height: 1.2;
-  margin: 8px 0;
   text-shadow: 2px 2px 8px rgba(106, 27, 154, 0.15);
 }
 .stroke-info {

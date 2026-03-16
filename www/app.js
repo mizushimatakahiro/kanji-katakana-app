@@ -17,6 +17,19 @@ const KATAKANA_LIST = [
   'ワ','ヲ','ン'
 ];
 
+const KATAKANA_TO_HIRAGANA = {
+  'ア':'あ','イ':'い','ウ':'う','エ':'え','オ':'お',
+  'カ':'か','キ':'き','ク':'く','ケ':'け','コ':'こ',
+  'サ':'さ','シ':'し','ス':'す','セ':'せ','ソ':'そ',
+  'タ':'た','チ':'ち','ツ':'つ','テ':'て','ト':'と',
+  'ナ':'な','ニ':'に','ヌ':'ぬ','ネ':'ね','ノ':'の',
+  'ハ':'は','ヒ':'ひ','フ':'ふ','ヘ':'へ','ホ':'ほ',
+  'マ':'ま','ミ':'み','ム':'む','メ':'め','モ':'も',
+  'ヤ':'や','ユ':'ゆ','ヨ':'よ',
+  'ラ':'ら','リ':'り','ル':'る','レ':'れ','ロ':'ろ',
+  'ワ':'わ','ヲ':'を','ン':'ん'
+};
+
 const KATAKANA_STROKES = {
   'ア':2,'イ':2,'ウ':3,'エ':3,'オ':3,
   'カ':2,'キ':4,'ク':2,'ケ':3,'コ':2,
@@ -240,6 +253,7 @@ const App = {
       }
       this.current = this.queue.pop();
       document.getElementById('katakana-display').textContent = this.current;
+      document.getElementById('katakana-hiragana').textContent = KATAKANA_TO_HIRAGANA[this.current] || '';
       const strokes = KATAKANA_STROKES[this.current] || '?';
       document.getElementById('katakana-stroke-info').textContent = `かくすう: ${strokes}かく`;
       document.getElementById('katakana-hint').classList.remove('hidden');
