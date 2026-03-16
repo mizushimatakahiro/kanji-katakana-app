@@ -38,6 +38,10 @@
         <span class="btn-icon">✏️</span>
         <span class="btn-label">テスト<br>モード</span>
       </button>
+      <button class="menu-btn names-btn" onclick="App.goTo('names')">
+        <span class="btn-icon">👤</span>
+        <span class="btn-label">カタカナ<br>なまえ</span>
+      </button>
       <button class="menu-btn wrong-btn" onclick="App.goTo('wrong')">
         <span class="btn-icon">📖</span>
         <span class="btn-label">まちがえた<br>かんじ</span>
@@ -69,6 +73,38 @@
       </div>
     </div>
     <img src="イメージキャラクター.png" alt="" class="mascot-small" id="katakana-mascot">
+  </div>
+
+  <!-- ========== カタカナ人物名モード ========== -->
+  <div id="names-screen" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="App.goTo('home')">◀ もどる</button>
+      <h2 class="screen-title">カタカナ なまえ</h2>
+    </div>
+    <div class="practice-area">
+      <!-- 名前全体表示 -->
+      <div class="names-name-display" id="names-full-name"></div>
+      <div class="names-hiragana-full" id="names-hiragana-full">まみ</div>
+      <div class="names-progress" id="names-progress">1 / 2 もじめ</div>
+      <!-- 現在の文字 -->
+      <div class="katakana-pair">
+        <span class="hiragana-label" id="names-current-hiragana">ま</span>
+        <span class="pair-arrow">→</span>
+        <span class="char-display" id="names-current-char">マ</span>
+      </div>
+      <div class="stroke-info" id="names-stroke-info">かくすう: 2かく</div>
+      <div class="canvas-wrapper">
+        <canvas id="names-canvas" width="300" height="300"></canvas>
+        <div class="canvas-hint" id="names-hint">ゆびで なぞってね！</div>
+      </div>
+      <div class="practice-buttons">
+        <button class="action-btn clear-btn" onclick="App.names.clearCanvas()">けす</button>
+        <button class="action-btn check-btn" onclick="App.names.check()">チェック！</button>
+        <button class="action-btn next-btn" onclick="App.names.nextChar()">つぎの もじ ▶</button>
+        <button class="action-btn skip-name-btn" onclick="App.names.nextName()">つぎの なまえ ▶▶</button>
+      </div>
+    </div>
+    <img src="イメージキャラクター.png" alt="" class="mascot-small" id="names-mascot">
   </div>
 
   <!-- ========== 漢字学習モード ========== -->

@@ -27,8 +27,26 @@ const KATAKANA_TO_HIRAGANA = {
   'マ':'ま','ミ':'み','ム':'む','メ':'め','モ':'も',
   'ヤ':'や','ユ':'ゆ','ヨ':'よ',
   'ラ':'ら','リ':'り','ル':'る','レ':'れ','ロ':'ろ',
-  'ワ':'わ','ヲ':'を','ン':'ん'
+  'ワ':'わ','ヲ':'を','ン':'ん',
+  // 小文字・特殊
+  'ッ':'っ','ャ':'ゃ','ュ':'ゅ','ョ':'ょ',
+  'ァ':'ぁ','ィ':'ぃ','ゥ':'ぅ','ェ':'ぇ','ォ':'ぉ',
+  'ー':'ー'
 };
+
+// カタカナ名前を一括でひらがなに変換
+function katakanaToHiragana(str) {
+  return str.split('').map(c => KATAKANA_TO_HIRAGANA[c] || c).join('');
+}
+
+const NAME_LIST = [
+  'マミ','タカヒロ','アサミ','イクミ','ワタル','ココロ',
+  'レオ','ミズシマ','シマ','ヒロユキ','アオバ','ウララ',
+  'ナギト','リョウ','メグミ','アキコ','ミミ','ユミコ',
+  'ミユ','テン','サユリ','ヒデアキ','ヨシオ','ワカナ',
+  'コア','イクコ','アユム','ナンヤ','サキ','チアキ',
+  'アッサー','マエダ','ケイコ','カホ','アズ','スミエ'
+];
 
 const KATAKANA_STROKES = {
   'ア':2,'イ':2,'ウ':3,'エ':3,'オ':3,
@@ -223,6 +241,7 @@ const App = {
 
     // 画面初期化
     if (screen === 'katakana') this.katakana.init();
+    if (screen === 'names') this.names.init();
     if (screen === 'kanji') this.kanji.init();
     if (screen === 'test') this.test.init();
     if (screen === 'wrong') this.wrong.init();
@@ -547,6 +566,138 @@ const App = {
       if (this.score === this.questions.length) {
         celebrate();
       }
+    }
+  },
+
+  // ===== カタカナ人物名モード =====
+  names: {
+    currentName: null,
+    currentCharIndex: 0,
+    ctx: null,
+    canvas: null,
+    canvasW: 300,
+    canvasH: 300,
+    queue: [],
+
+    init() {
+      this.queue = shuffle([...NAME_LIST]);
+      this.canvas = document.getElementById('names-canvas');
+      this.ctx = setupCanvas(this.canvas);
+      const dims = initDrawing(this.canvas, this.ctx);
+      this.canvasW = dims.w;
+      this.canvasH = dims.h;
+      this.showNextName();
+    },
+
+    showNextName() {
+      if (this.queue.length === 0) {
+        this.queue = shuffle([...NAME_LIST]);
+      }
+      this.currentName = this.queue.pop();
+      this.currentCharIndex = 0;
+      this.updateDisplay();
+    },
+
+    updateDisplay() {
+      const name = this.currentName;
+      const chars = name.split('');
+      const idx = this.currentCharIndex;
+
+      // 名前全体の表示（現在の文字をハイライト）
+      const nameEl = document.getElementById('names-full-name');
+      let nameHtml = '';
+      for (let i = 0; i < chars.length; i++) {
+        if (i === idx) {
+          nameHtml += `<span class="name-char-active">${chars[i]}</span>`;
+        } else if (i < idx) {
+          nameHtml += `<span class="name-char-done">${chars[i]}</span>`;
+        } else {
+          nameHtml += `<span class="name-char-pending">${chars[i]}</span>`;
+        }
+      }
+      nameEl.innerHTML = nameHtml;
+
+      // ひらがな全体表示
+      const hiraganaName = katakanaToHiragana(name);
+      document.getElementById('names-hiragana-full').textContent = hiraganaName;
+
+      // 現在の文字の情報
+      const currentChar = chars[idx];
+      document.getElementById('names-current-char').textContent = currentChar;
+      const hiragana = KATAKANA_TO_HIRAGANA[currentChar] || currentChar;
+      document.getElementById('names-current-hiragana').textContent = hiragana;
+
+      // 進捗
+      document.getElementById('names-progress').textContent =
+        `${idx + 1} / ${chars.length} もじめ`;
+
+      // ストローク情報
+      const strokes = KATAKANA_STROKES[currentChar] || '?';
+      document.getElementById('names-stroke-info').textContent = `かくすう: ${strokes}かく`;
+
+      document.getElementById('names-hint').textContent = 'ゆびで なぞってね！';
+      document.getElementById('names-hint').classList.remove('hidden');
+      this.clearCanvas();
+    },
+
+    clearCanvas() {
+      const ctx = this.ctx;
+      const w = this.canvasW;
+      const h = this.canvasH;
+      ctx.clearRect(0, 0, w * 2, h * 2);
+      drawGuideLines(ctx, w, h);
+      const currentChar = this.currentName.split('')[this.currentCharIndex];
+      drawBgChar(ctx, currentChar, w, h);
+    },
+
+    check() {
+      const ctx = this.ctx;
+      const dpr = window.devicePixelRatio || 1;
+      const w = Math.floor(this.canvasW * dpr);
+      const h = Math.floor(this.canvasH * dpr);
+      const imageData = ctx.getImageData(0, 0, w, h);
+      const data = imageData.data;
+
+      let drawnPixels = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        if (data[i] < 80 && data[i+1] < 80 && data[i+2] < 80 && data[i+3] > 200) {
+          drawnPixels++;
+        }
+      }
+
+      const totalPixels = w * h;
+      const coverage = drawnPixels / totalPixels;
+
+      if (coverage > 0.005) {
+        document.getElementById('names-hint').classList.add('hidden');
+        const chars = this.currentName.split('');
+        if (this.currentCharIndex < chars.length - 1) {
+          // 次の文字へ
+          celebrate(() => {
+            this.currentCharIndex++;
+            this.updateDisplay();
+          });
+        } else {
+          // 名前完成！
+          celebrate();
+        }
+      } else {
+        document.getElementById('names-hint').textContent = 'もっと かいてみよう！';
+      }
+    },
+
+    nextChar() {
+      const chars = this.currentName.split('');
+      if (this.currentCharIndex < chars.length - 1) {
+        this.currentCharIndex++;
+        this.updateDisplay();
+      } else {
+        this.showNextName();
+      }
+    },
+
+    nextName() {
+      this.showNextName();
     }
   },
 
