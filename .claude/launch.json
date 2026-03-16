@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "learning-app",
+      "runtimeExecutable": "/usr/bin/python3",
+      "runtimeArgs": ["-m", "http.server", "8080", "-d", "/Users/mizushimatakahiro/Desktop/小学生の学習アプリ"],
+      "port": 8080
+    }
+  ]
+}
